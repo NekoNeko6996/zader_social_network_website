@@ -10,7 +10,10 @@ public class NewsfeedController {
     @GetMapping("/")
     public String home(Model model) {
         // Gửi dữ liệu mẫu sang HTML
-        model.addAttribute("message", "Chào mừng đến với Zader Social Network!");
-        return "index"; // Trả về file index.html
+        model.addAttribute("successMessage", "Chào mừng đến với Zader Social Network!");
+        model.addAttribute("errorMessage", "Có lỗi xãy ra!");
+        model.addAttribute("warningMessage", "Bạn chắc chứ?!");
+        model.addAttribute("infoMessage", ":)!");
+        return "newsfeed"; // Trả về file newsfeed.html
     }
 }
