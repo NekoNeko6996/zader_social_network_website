@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Zader - Test Page</title>
+    <style>
+        /* Áp dụng Bảng Màu Zader [cite: 31] */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F9F9FB; /* Off-White [cite: 54] */
+            color: #2C2C4E; /* Dark Charcoal [cite: 48] */
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .hero {
+            /* Gradient Zader Blue -> Zader Purple [cite: 36, 38] */
+            background: linear-gradient(135deg, #4A56E2 0%, #8A4AEE 100%);
+            color: #FFFFFF; /* Pure White [cite: 40] */
+            padding: 100px 20px;
+        }
+        h1 { font-size: 3rem; margin-bottom: 10px; }
+        .btn-primary {
+            background-color: #18D2B4; /* Vibrant Teal - Accent Color [cite: 44] */
+            color: #fff;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .status-box {
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            width: 60%;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>ZADER</h1>
+        <p>Mạng xã hội kết nối mọi người</p>
+    </div>
+
+    <div class="status-box">
+        <h2 style="color: #2ECC71;">System Status: Online</h2> <p th:text="${message}">Loading...</p>
+        <p>Kết nối Database: <strong>SQL Server</strong></p>
+        
+        <a href="#" class="btn-primary">Tham gia ngay</a>
+    </div>
+
+</body>
+</html>
