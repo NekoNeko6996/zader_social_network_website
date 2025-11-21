@@ -1,49 +1,10 @@
 <!DOCTYPE html>
 
-<html lang="en"><head>
-        <meta charset="utf-8"/>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-        <title>Zader - Newsfeed</title>
-        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-        <link href="https://fonts.googleapis.com" rel="preconnect"/>
-        <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
-        <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        colors: {
-                            "primary-gradient-start": "#4A56E2",
-                            "primary-gradient-end": "#8A4AEE",
-                            "primary-cta": "#18D2B4",
-                            "secondary-accent": "#4A56E2",
-                            "background": "#F9F9FB",
-                            "container": "#FFFFFF",
-                            "text-primary": "#2C2C4E",
-                            "text-secondary": "#8A94A6",
-                            "status-success": "#2ECC71",
-                            "status-error": "#E74C3C",
-                        },
-                        fontFamily: {
-                            display: ["Plus Jakarta Sans", "sans-serif"],
-                        },
-                        borderRadius: {
-                            DEFAULT: "8px",
-                            lg: "12px",
-                            xl: "16px",
-                            full: "9999px",
-                        },
-                    },
-                },
-            }
-        </script>
-        <style>
-            .material-symbols-outlined {
-                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            }
-        </style>
-    </head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <!--head-->
+    <head th:replace="~{fragments/head :: common-head}"></head>
+
     <body class="bg-background font-display text-text-primary">
         <div class="relative flex min-h-screen w-full flex-col">
             <!-- TopNavBar -->
@@ -231,6 +192,16 @@
                     </aside>
                 </div>
             </main>
-            <div th:replace="~{fragments/alerts :: success(${successMessage})}"></div>
+            <!-- 1. Container chứa Alert -->
+            <div class="fixed bottom-5 right-5 z-50 flex flex-col gap-3 w-full max-w-sm pointer-events-none">
+                <div class="pointer-events-auto"><div th:replace="~{fragments/alerts :: success(${successMessage})}"></div></div>
+                <div class="pointer-events-auto"><div th:replace="~{fragments/alerts :: error(${errorMessage})}"></div></div>
+                <div class="pointer-events-auto"><div th:replace="~{fragments/alerts :: warning(${warningMessage})}"></div></div>
+                <div class="pointer-events-auto"><div th:replace="~{fragments/alerts :: info(${infoMessage})}"></div></div>
+            </div>
+
+            <!-- 2. QUAN TRỌNG: Nhúng Script xử lý đóng Alert vào đây -->
+            <div th:replace="~{fragments/alerts :: alert-script}"></div>
         </div>
-    </body></html>
+    </body>
+</html>

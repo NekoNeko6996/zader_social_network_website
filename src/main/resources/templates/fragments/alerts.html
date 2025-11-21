@@ -1,29 +1,94 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
-
-    <div th:fragment="success(message)" 
-         th:if="${message}"
-         id="success-alert"
-         class="flex items-center gap-4 bg-zader-success rounded-xl shadow-lg p-4 min-h-14 justify-between mb-4 transition-opacity duration-300">
-        
-        <div class="flex items-center gap-3">
-            <div class="text-zader-text-primary flex items-center justify-center shrink-0 size-7">
-                <span class="material-symbols-outlined text-3xl">check_circle</span>
+    <body>
+        <!-- 1. SUCCESS ALERT -->
+        <div th:fragment="success(message)" th:if="${message}"
+             class="alert-item w-full max-w-sm flex items-center gap-4 bg-zader-success text-white rounded-xl shadow-2xl p-4 min-h-14 justify-between transition-all duration-500 ease-in-out transform translate-x-0 opacity-100 mb-3">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <span class="material-symbols-outlined text-3xl shrink-0">check_circle</span>
+                <p class="text-white text-sm font-medium leading-normal flex-1" th:text="${message}">Thành công!</p>
             </div>
-            <p class="text-zader-text-primary text-base font-medium leading-normal flex-1" 
-               th:text="${message}">
-               Post published successfully.
-            </p>
-        </div>
-
-        <div class="shrink-0">
-            <div onclick="document.getElementById('success-alert').style.display='none'"
-                 class="text-zader-text-primary/70 hover:text-zader-text-primary transition-colors flex size-7 items-center justify-center cursor-pointer">
-                <span class="material-symbols-outlined text-2xl">close</span>
+            <div class="shrink-0 border-l border-white/20 pl-3 ml-1">
+                <div onclick="closeAlert(this.closest('.alert-item'))"
+                     class="hover:bg-white/20 transition-colors flex size-7 items-center justify-center cursor-pointer rounded-full">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </div>
             </div>
         </div>
-    </div>
 
-</body>
+        <!-- 2. ERROR ALERT -->
+        <div th:fragment="error(message)" th:if="${message}"
+             class="alert-item w-full max-w-sm flex items-center gap-4 bg-zader-error text-white rounded-xl shadow-2xl p-4 min-h-14 justify-between transition-all duration-500 ease-in-out transform translate-x-0 opacity-100 mb-3">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <span class="material-symbols-outlined text-3xl shrink-0">error</span>
+                <p class="text-white text-sm font-medium leading-normal flex-1" th:text="${message}">Lỗi!</p>
+            </div>
+            <div class="shrink-0 border-l border-white/20 pl-3 ml-1">
+                <div onclick="closeAlert(this.closest('.alert-item'))"
+                     class="hover:bg-white/20 transition-colors flex size-7 items-center justify-center cursor-pointer rounded-full">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. WARNING ALERT -->
+        <div th:fragment="warning(message)" th:if="${message}"
+             class="alert-item w-full max-w-sm flex items-center gap-4 bg-zader-warning text-white rounded-xl shadow-2xl p-4 min-h-14 justify-between transition-all duration-500 ease-in-out transform translate-x-0 opacity-100 mb-3">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <span class="material-symbols-outlined text-3xl shrink-0">warning</span>
+                <p class="text-white text-sm font-medium leading-normal flex-1" th:text="${message}">Cảnh báo!</p>
+            </div>
+            <div class="shrink-0 border-l border-white/20 pl-3 ml-1">
+                <div onclick="closeAlert(this.closest('.alert-item'))"
+                     class="hover:bg-white/20 transition-colors flex size-7 items-center justify-center cursor-pointer rounded-full">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. INFO ALERT -->
+        <div th:fragment="info(message)" th:if="${message}"
+             class="alert-item w-full max-w-sm flex items-center gap-4 bg-white text-zader-text-primary rounded-xl shadow-lg p-4 min-h-14 justify-between ring-1 ring-black/5 transition-all duration-500 ease-in-out transform translate-x-0 opacity-100 mb-3">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <span class="material-symbols-outlined text-3xl text-primary shrink-0">info</span>
+                <p class="text-zader-text-primary text-sm font-medium leading-normal flex-1" th:text="${message}">Thông tin.</p>
+            </div>
+            <div class="shrink-0 border-l border-gray-200 pl-3 ml-1">
+                <div onclick="closeAlert(this.closest('.alert-item'))"
+                     class="text-gray-400 hover:text-zader-text-primary hover:bg-gray-100 transition-colors flex size-7 items-center justify-center cursor-pointer rounded-full">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FRAGMENT SCRIPT: Chứa logic JS để tự động đóng -->
+        <script th:fragment="alert-script">
+            document.addEventListener('DOMContentLoaded', function () {
+                // Tìm tất cả các alert đang hiển thị
+                const alerts = document.querySelectorAll('.alert-item');
+
+                alerts.forEach(function (alert) {
+                    // Đặt hẹn giờ 5 giây (5000ms)
+                    setTimeout(function () {
+                        closeAlert(alert);
+                    }, 5000);
+                });
+            });
+
+            // Hàm đóng alert với hiệu ứng mờ dần
+            function closeAlert(element) {
+                if (!element)
+                    return;
+
+                // 1. Làm mờ và đẩy sang phải
+                element.style.opacity = '0';
+                element.style.transform = 'translateX(20px)'; // Đẩy nhẹ sang phải
+
+                // 2. Đợi 0.5s cho hiệu ứng chạy xong rồi mới xóa khỏi DOM
+                setTimeout(function () {
+                    element.remove();
+                }, 500);
+            }
+        </script>
+    </body>
 </html>
