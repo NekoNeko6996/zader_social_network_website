@@ -4,6 +4,7 @@ import com.group02.zader.common.enums.ReactionType;
 import com.group02.zader.common.enums.TargetType;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "reactions", uniqueConstraints = {
@@ -13,7 +14,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Reaction extends BaseEntity {
 
     @Id

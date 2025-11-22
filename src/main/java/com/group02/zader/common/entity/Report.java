@@ -4,6 +4,7 @@ import com.group02.zader.common.enums.ReportStatus;
 import com.group02.zader.common.enums.TargetType;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "reports")
@@ -11,7 +12,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Report extends BaseEntity {
 
     @Id

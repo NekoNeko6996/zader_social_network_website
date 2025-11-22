@@ -1,0 +1,173 @@
+/* =========================================
+   BẢNG MÀU CHUẨN (CẬP NHẬT THEO IMAGE 5 & 6)
+   ========================================= */
+:root {
+    --primary-cta: #18D2B4;    /* Màu nút bấm (Xanh Teal - Theo mẫu) */
+    --primary-hover: #14bda0;  /* Màu nút khi hover */
+    --link-color: #4A56E2;     /* Màu link (Zader Blue - Forgot password) */
+    --bg-color: #F9F9FB;       /* Màu nền website (Xám rất nhạt) */
+    --card-bg: #FFFFFF;        /* Màu nền thẻ form */
+    --text-dark: #2C2C4E;      /* Màu tiêu đề */
+    --text-gray: #8A94A6;      /* Màu chữ phụ */
+    --border-color: #E0E0E0;   /* Màu viền input */
+    --error-color: #E74C3C;    /* Màu lỗi */
+}
+
+/* =========================================
+   RESET & BODY
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', sans-serif; /* Font hiện đại hơn */
+}
+
+body {
+    background-color: var(--bg-color);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* =========================================
+   AUTH CARD (LAYOUT THẺ GIỮA)
+   ========================================= */
+.auth-card {
+    background-color: var(--card-bg);
+    width: 480px; /* Độ rộng vừa phải như mẫu */
+    max-width: 90%;
+    padding: 50px 40px;
+    border-radius: 16px; /* Bo góc mềm mại */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ */
+    text-align: center; /* Căn giữa nội dung */
+}
+
+/* Logo icon */
+.auth-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* Hình tròn */
+    margin: 0 auto 20px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+}
+
+.auth-subtitle {
+    font-size: 15px;
+    color: var(--text-gray);
+    margin-bottom: 30px;
+}
+
+/* =========================================
+   FORM ELEMENTS
+   ========================================= */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left; /* Nhãn input căn trái */
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 14px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 15px;
+    color: var(--text-dark);
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.form-control::placeholder {
+    color: #C0C0C0;
+}
+
+.form-control:focus {
+    border-color: var(--primary-cta);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(24, 210, 180, 0.1);
+}
+
+/* Icon mắt (Show/Hide password) */
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-gray);
+    font-size: 18px;
+}
+
+/* Link Forgot Password */
+.forgot-password-link {
+    float: right;
+    font-size: 13px;
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-cta);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.auth-footer {
+    margin-top: 25px;
+    font-size: 14px;
+    color: var(--text-gray);
+}
+
+.auth-link {
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+/* Thông báo lỗi */
+.alert-error {
+    background-color: #FEF2F2;
+    color: var(--error-color);
+    border: 1px solid #FECACA;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    text-align: left;
+}

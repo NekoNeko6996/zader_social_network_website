@@ -14,6 +14,6 @@ public class NewsfeedController {
         model.addAttribute("errorMessage", "Có lỗi xãy ra!");
         model.addAttribute("warningMessage", "Bạn chắc chứ?!");
         model.addAttribute("infoMessage", ":)!");
-        return "newsfeed"; // Trả về file newsfeed.html
+        return "guest/newsfeed"; // Trả về file newsfeed.html
     }
 }
