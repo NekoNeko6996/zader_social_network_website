@@ -7,11 +7,18 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class BaseEntity {
 
     // KHÔNG KHAI BÁO ID Ở ĐÂY (Để các bảng con tự định nghĩa tên ID riêng)
@@ -24,6 +31,7 @@ public abstract class BaseEntity {
     @Column(name = "updatedAt")
     private LocalDateTime updatedAt;
 
+    @Builder.Default
     @Column(name = "isDeleted")
     private Boolean isDeleted = false;
 

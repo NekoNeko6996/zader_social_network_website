@@ -3,6 +3,7 @@ package com.group02.zader.common.entity;
 import com.group02.zader.common.enums.MediaType;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "postMedia")
@@ -10,7 +11,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class PostMedia extends BaseEntity {
 
     @Id

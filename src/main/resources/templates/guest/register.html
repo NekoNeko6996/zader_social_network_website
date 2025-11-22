@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - Zader</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+<body>
+
+    <div class="auth-card">
+        <h1 class="auth-title">Join Zader</h1>
+        <p class="auth-subtitle">Create your account to join Zader.</p>
+
+        <form th:action="@{/register}" th:object="${registerDto}" method="post">
+            
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" th:field="*{email}" class="form-control" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" th:field="*{username}" class="form-control" placeholder="Choose a username" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" th:field="*{password}" class="form-control" placeholder="Create a password" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <div class="input-wrapper">
+                    <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Sign Up</button>
+        </form>
+
+        <div class="auth-footer">
+            Already have an account? <a th:href="@{/login}" class="auth-link">Log In</a>
+        </div>
+    </div>
+</body>
+</html>

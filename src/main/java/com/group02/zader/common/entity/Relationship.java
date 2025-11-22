@@ -4,6 +4,7 @@ package com.group02.zader.common.entity;
 import com.group02.zader.common.enums.RelationshipStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "relationships", uniqueConstraints = {
@@ -13,7 +14,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Relationship extends BaseEntity {
 
     @Id
