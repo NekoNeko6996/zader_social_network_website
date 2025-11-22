@@ -1,10 +1,10 @@
 package com.group02.zader.common.entity;
 
-import com.group02.zader.common.entity.BaseEntity;
 import com.group02.zader.common.enums.Role;
 import com.group02.zader.common.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "members") // Khớp tên bảng trong SQL
@@ -12,7 +12,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Member extends BaseEntity {
 
     @Id
