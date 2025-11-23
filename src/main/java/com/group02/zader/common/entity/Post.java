@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.List;
+
 @Entity
 @Table(name = "posts")
 @Getter
@@ -18,7 +20,6 @@ public class Post extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
 
-    // Quan hệ với User
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId", nullable = false)
     private Member member;
@@ -30,8 +31,11 @@ public class Post extends BaseEntity {
     @Column(length = 20)
     private PostVisibility visibility;
 
-    // Chia sẻ bài viết (Recursive)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "originalPostId")
     private Post originalPost;
+
+    // Để lấy danh sách media từ post: post.getPostMediaList()
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PostMedia> postMediaList;
 }

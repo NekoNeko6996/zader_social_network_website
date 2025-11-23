@@ -8,8 +8,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -31,12 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseGet(() -> userRepository.findByEmail(identifier)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with identifier: " + identifier)));
 
-        // 2. Trả về đối tượng UserDetails của Spring Security.
-        // Đối tượng này chứa: username, password (đã mã hóa) và Authority (quyền hạn/role).
-        return new org.springframework.security.core.userdetails.User(
-                member.getUsername(), // Tên đăng nhập
-                member.getPasswordHash(), // Mật khẩu (đã mã hóa)
-                Collections.singleton(member.getRole().toGrantedAuthority()) // Quyền hạn (ví dụ: ROLE_USER, ROLE_ADMIN)
-        );
+        // 2. Trả về đối tượng CustomUserDetails.
+        return new CustomUserDetails(member);
     }
 }
