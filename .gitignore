@@ -32,3 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 src/main/resources/application.properties
+
+# Bỏ qua tất cả file trong thư mục uploads
+uploads/*
+
+# (Tùy chọn) Giữ lại file .gitkeep để Git vẫn theo dõi thư mục uploads rỗng
+!uploads/.gitkeep
