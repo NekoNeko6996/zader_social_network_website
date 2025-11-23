@@ -22,6 +22,7 @@ public class SecurityConfig {
         
         http
             .authorizeHttpRequests(authorize -> authorize 
+                    // allow guest
                 .requestMatchers(
                         "/",
                         "/login", 
@@ -29,8 +30,11 @@ public class SecurityConfig {
                         "/css/**", 
                         "/js/**", 
                         "/images/**",
-                        "/icons/**"
+                        "/icons/**",
+                        "/default/**",
+                        "/uploads/**"
                 ).permitAll() 
+                    // only ADMIN
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )

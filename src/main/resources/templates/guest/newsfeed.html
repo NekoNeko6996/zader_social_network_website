@@ -1,38 +1,14 @@
 <!DOCTYPE html>
 
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
     <!--head-->
     <head th:replace="~{fragments/head :: common-head}"></head>
 
     <body class="bg-background font-display text-text-primary">
         <div class="relative flex min-h-screen w-full flex-col">
-            <!-- TopNavBar -->
-            <header class="sticky top-0 z-50 flex h-16 w-full items-center justify-between whitespace-nowrap bg-gradient-to-r from-primary-gradient-start to-primary-gradient-end px-6 shadow-md md:px-10">
-                <div class="flex items-center gap-8">
-                    <div class="flex items-center gap-3 text-white">
-                        <span class="material-symbols-outlined text-3xl">hub</span>
-                        <h1 class="text-2xl font-bold leading-tight tracking-tighter">Zader</h1>
-                    </div>
-                    <div class="hidden lg:flex">
-                        <label class="relative flex h-10 w-full min-w-40 max-w-sm items-center">
-                            <span class="material-symbols-outlined absolute left-3 text-text-secondary">search</span>
-                            <input class="form-input h-full w-full rounded-lg border-none bg-white/20 pl-10 pr-4 text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-primary-cta" placeholder="Search Zader" type="text"/>
-                        </label>
-                    </div>
-                </div>
-                <div class="flex items-center justify-end gap-3 md:gap-5">
-                    <button class="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/20 text-white transition-colors hover:bg-white/30">
-                        <span class="material-symbols-outlined">chat_bubble</span>
-                        <span class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-primary-gradient-end bg-status-error"></span>
-                    </button>
-                    <button class="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/20 text-white transition-colors hover:bg-white/30">
-                        <span class="material-symbols-outlined">notifications</span>
-                        <span class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-primary-gradient-end bg-status-error"></span>
-                    </button>
-                    <div class="h-10 w-10 rounded-full bg-cover bg-center bg-no-repeat" data-alt="User avatar of Jane Doe" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD-8H84pBp_a2R8Sw2iZkAbW1dyoqoG1DgJPjFEoZhq66mNfRTAl6-O7H6tiQClD1nhPFQuxr-5w6PADIU8Rs8uMZXOVg8lQiaaDaXbNmW6wpmNw4a22QW0_habPE3qi0pZHwxbleFMoqkxSlaOIto94k98pNw0CH8xiqLJwmAGlDvnP8WzGgCpbCQXPT0EHA8n6jL8yZXTlYG4CQFCZBI9C-mOmvSAcFH93icEW8kowRvhyo73J1GKiMz6dsvwjm2P-2t7WxZyL42x')"></div>
-                </div>
-            </header>
+            <!-- Header -->
+            <div th:replace="~{fragments/header :: header}"></div>
+
             <!-- Main Content -->
             <main class="mx-auto w-full max-w-7xl flex-1 p-4 md:p-6 lg:p-8">
                 <div class="grid grid-cols-12 gap-6 lg:gap-8">
@@ -62,82 +38,87 @@
                     <!-- Center Feed -->
                     <div class="col-span-12 lg:col-span-6">
                         <div class="flex flex-col gap-6">
-                            <!-- Composer -->
                             <div class="flex flex-col gap-4 rounded-lg bg-container p-4 shadow-sm">
-                                <div class="flex items-start gap-4">
-                                    <div class="h-10 w-10 flex-shrink-0 rounded-full bg-cover bg-center bg-no-repeat" data-alt="User avatar of Jane Doe" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCsn-OYqv7w53FOc7K053DNx-a4EDemt_ttNi3baQZvvYbdvJ1VOZH6L7gT7spj5OUeKDOSVpuMsKEc3jpONDpP_g-I9WQ89ztoCfJTb1tJUNbTrchIu4nx37FHUre2crGMLbxnPyNKPAIIcH6huY8kGadJz-OqyW7mXoaXC-r0rpd1su-qsNbrOPh4ClW2UjWhk6gPgyt6a80btWgbevGedUPGNy13QJ_BoLjucO0IZC7pAfpjjhWw54T7Q6r9jQu3svvwwmHav7yP')"></div>
-                                    <textarea class="form-textarea flex-1 resize-none rounded-lg border-gray-200 bg-background p-3 text-text-primary placeholder:text-text-secondary focus:border-secondary-accent focus:ring-secondary-accent" placeholder="Share what's new, Jane..." rows="3"></textarea>
+                                <div sec:authorize="isAuthenticated()" class="flex flex-col gap-4 rounded-lg bg-container p-4 shadow-sm">
+                                    <form th:action="@{/post/create}" th:object="${postCreateDto}" method="post" enctype="multipart/form-data">
+                                        <div class="flex items-start gap-4">
+                                            <div class="h-10 w-10 flex-shrink-0 rounded-full bg-cover bg-center bg-no-repeat" 
+                                                 th:style="'background-image: url(' + 
+                                                 (${#authentication.principal != 'anonymousUser'} and ${#authentication.principal.member.avatarUrl != null} 
+                                                 ? @{'/uploads/' + ${#authentication.principal.member.avatarUrl}} 
+                                                 : '/images/default-avatar.png') + ');'">
+                                            </div>
+                                            <textarea th:field="*{content}" 
+                                                      class="form-textarea flex-1 resize-none rounded-lg border-gray-200 bg-background p-3 text-text-primary placeholder:text-text-secondary focus:border-secondary-accent focus:ring-secondary-accent" 
+                                                      placeholder="Share what's new..." rows="3" required></textarea>
+                                        </div>
+
+                                        <div id="image-preview-container" class="hidden mt-2 relative">
+                                            <img id="image-preview" src="#" alt="Image Preview" class="max-h-60 rounded-lg border border-gray-200">
+                                            <button type="button" onclick="removeImage()" class="absolute top-1 right-1 bg-gray-800 text-white rounded-full p-1 text-xs">✕</button>
+                                        </div>
+
+                                        <div class="flex items-center justify-between mt-3">
+                                            <div class="flex items-center gap-2">
+                                                <button type="button" onclick="document.getElementById('fileInput').click()" 
+                                                        class="flex h-9 w-9 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-gray-100">
+                                                    <span class="material-symbols-outlined text-xl">image</span>
+                                                </button>
+                                                <input type="file" id="fileInput" th:field="*{imageFile}" class="hidden" accept="image/*" onchange="previewImage(this)">
+
+                                            </div>
+                                            <button type="submit" class="h-9 cursor-pointer items-center justify-center rounded-lg bg-primary-cta px-6 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-90">Post</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div class="flex items-center justify-between">
-                                    <div class="flex items-center gap-2">
-                                        <button class="flex h-9 w-9 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-gray-100">
-                                            <span class="material-symbols-outlined text-xl">image</span>
-                                        </button>
-                                        <button class="flex h-9 w-9 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-gray-100">
-                                            <span class="material-symbols-outlined text-xl">link</span>
-                                        </button>
-                                        <button class="flex h-9 w-9 items-center justify-center rounded-full text-text-secondary transition-colors hover:bg-gray-100">
-                                            <span class="material-symbols-outlined text-xl">poll</span>
-                                        </button>
-                                    </div>
-                                    <button class="h-9 cursor-pointer items-center justify-center rounded-lg bg-primary-cta px-6 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-90">Post</button>
+
+                                <div sec:authorize="!isAuthenticated()" class="flex flex-col gap-4 rounded-lg bg-container p-4 shadow-sm text-center">
+                                    <p class="text-text-secondary">Please <a th:href="@{/login}" class="text-primary-cta font-bold hover:underline">Login</a> to share your thoughts.</p>
                                 </div>
                             </div>
-                            <!-- Card 1 -->
-                            <div class="flex flex-col rounded-lg bg-container shadow-sm">
+
+                            <div th:each="post : ${posts}" class="flex flex-col rounded-lg bg-container shadow-sm">
                                 <div class="flex items-center gap-3 p-4">
-                                    <div class="h-10 w-10 flex-shrink-0 rounded-full bg-cover bg-center" data-alt="User avatar of Alex Walker" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAIl6sp6I4ZqLDhn4Es3DfxkCPZgi1vWSk2wXtIyTv2c4rg0GSIf8RvcLn_eiyDN-yJ_3CnoK-qtlEDeLM8RdfshDpU7uSQ5dXSU5YSYIHt1JVV2qpckJFK8ZRCsH3y_rkgfNEqAuqMKY-1kfT3ZvsTOn6s5H25ArquV0o7FoHwgIEUNe6acT1DqG3iLVw5wCmCNGl0UtsQ655NH7tYsyIz9LvpaOOwTQwhg9wNJEUt8VgXG6bedqm71vQMRMxAmg8j77JXbSuogvHN')"></div>
+                                    <div class="h-10 w-10 flex-shrink-0 rounded-full bg-cover bg-center" 
+                                         th:style="'background-image: url(' + @{'/uploads/' + ${post.member.avatarUrl != null ? post.member.avatarUrl : '/default/default-avatar.png'}} + ');'"></div>
+
                                     <div class="flex flex-col">
-                                        <p class="font-bold text-text-primary">Alex Walker</p>
-                                        <p class="text-xs text-text-secondary">2h ago</p>
+                                        <p class="font-bold text-text-primary" th:text="${post.member.fullName != null ? post.member.fullName : post.member.username}">Author Name</p>
+                                        <p class="text-xs text-text-secondary" th:text="${#temporals.format(post.createdAt, 'dd-MM-yyyy HH:mm')}">Time</p>
                                     </div>
                                 </div>
+
                                 <div class="px-4 pb-4">
-                                    <p class="text-text-primary">Just had an amazing trip to the mountains! The views were absolutely breathtaking. Can't wait to go back and explore more. 🏔️ #travel #mountains #adventure</p>
+                                    <p class="text-text-primary whitespace-pre-wrap" th:text="${post.content}">Content...</p>
                                 </div>
-                                <div class="aspect-video w-full bg-cover bg-center" data-alt="A scenic mountain range with a lake and lush green trees in the foreground" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBF6WK84Z_UK5tHlqBdfXDr-ZcadveEp3oymCNW-rNv1qWMavdeMdB0Y90EFcahzJHsOZK9c2jh9jIw11C-4E3jVT9d0cuxLwqSf8DdygOjC048TEg1A6uASugDEoxsDrPhSMw3PDrGEdV6pQFwVPp4kj3t1wFI-Cyo3ipoQPOjYjCajL1iI_a7gW2pYLiBHVCPlXg-8VAUeCA6wPMRjEg5C72YKk4FOGjvxS3B2otK5_QtZMvHIP-aMUodFVfjthpqbTho1jthC6tZ')"></div>
-                                <div class="flex flex-wrap justify-between border-t border-gray-100">
+
+                                <div th:if="${post.postMediaList != null and !post.postMediaList.empty}" class="w-full mt-3">
+                                    <div th:each="media : ${post.postMediaList}">
+
+                                        <img th:if="${media.mediaType.name() == 'IMAGE'}" 
+                                             th:src="@{'/uploads/' + ${media.mediaUrl}}" 
+                                             class="w-full h-auto object-cover rounded-lg mb-2 border border-gray-100" 
+                                             alt="Post Image">
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap justify-between border-t border-gray-100 mt-2">
                                     <button class="flex flex-1 items-center justify-center gap-2 px-3 py-3 text-text-secondary transition-colors hover:bg-gray-50 hover:text-red-500">
                                         <span class="material-symbols-outlined text-xl">favorite</span>
-                                        <p class="text-sm font-medium">1.2k</p>
+                                        <p class="text-sm font-medium">Like</p>
                                     </button>
                                     <button class="flex flex-1 items-center justify-center gap-2 px-3 py-3 text-text-secondary transition-colors hover:bg-gray-50 hover:text-secondary-accent">
                                         <span class="material-symbols-outlined text-xl">chat_bubble</span>
-                                        <p class="text-sm font-medium">345</p>
+                                        <p class="text-sm font-medium">Comment</p>
                                     </button>
                                     <button class="flex flex-1 items-center justify-center gap-2 px-3 py-3 text-text-secondary transition-colors hover:bg-gray-50 hover:text-secondary-accent">
                                         <span class="material-symbols-outlined text-xl">share</span>
-                                        <p class="text-sm font-medium">123</p>
+                                        <p class="text-sm font-medium">Share</p>
                                     </button>
                                 </div>
                             </div>
-                            <!-- Card 2 -->
-                            <div class="flex flex-col rounded-lg bg-container shadow-sm">
-                                <div class="flex items-center gap-3 p-4">
-                                    <div class="h-10 w-10 flex-shrink-0 rounded-full bg-cover bg-center" data-alt="User avatar of Sarah O'Connor" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCHafPYOsf1kbH9gtWTlC2deyrtzgxDB7-2pmg_VGDqqYNseNfRCE6IE3NNm-5ztNHwTQK7j08GcXtSBbew4TDhKAmxtJedbq_G-QFlK83VBDvnwNPh4Fl6RruYuo7iAxZb7NSwsEnRL5-pxEg2VgXRTCw15h45QlwlXn5IjP0ba-8T5PH7cSKWyvD2nYKf0RmmAqqzIO_ZQpfaOx-Puqwke-RAnbNuBziPqJb4rwpNMzg99wGEKrErgKCp0KqcDQC-_RQp7YVMIGPh')"></div>
-                                    <div class="flex flex-col">
-                                        <p class="font-bold text-text-primary">Sarah O'Connor</p>
-                                        <p class="text-xs text-text-secondary">5h ago</p>
-                                    </div>
-                                </div>
-                                <div class="px-4 pb-4">
-                                    <p class="text-text-primary">Exploring the beautiful cityscapes today. So much history in every corner! Highly recommend a walking tour to anyone visiting. #citylife #architecture</p>
-                                </div>
-                                <div class="aspect-video w-full bg-cover bg-center" data-alt="A wide angle shot of a city street with tall buildings and traffic at dusk" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCP_0AjZAogawWUaqW3Re7dNW45L5OvbMzFb-j9L-W04I1GpKyjIYx_rzK0GJQADMbV2tTJNiDzirPs0c-QgZzdofssre1ERWHMxmOo336y-kqEZ_BYysnXp9B81zDAh9GPtlcGI_JNruWyFwTgTqmyF5jWsHCzKQZY0lJOIr_o08giLEbxLZOwILfBZFQDu0VVwFpEpw_jL5Mpk7AvjBSgm0kbnY4dknGUQwFpjj8UPvttiTo7LhyuHXHtvt8NQsyhRlQGLOpn7_sr')"></div>
-                                <div class="flex flex-wrap justify-between border-t border-gray-100">
-                                    <button class="flex flex-1 items-center justify-center gap-2 px-3 py-3 text-text-secondary transition-colors hover:bg-gray-50 hover:text-red-500">
-                                        <span class="material-symbols-outlined text-xl">favorite</span>
-                                        <p class="text-sm font-medium">876</p>
-                                    </button>
-                                    <button class="flex flex-1 items-center justify-center gap-2 px-3 py-3 text-text-secondary transition-colors hover:bg-gray-50 hover:text-secondary-accent">
-                                        <span class="material-symbols-outlined text-xl">chat_bubble</span>
-                                        <p class="text-sm font-medium">102</p>
-                                    </button>
-                                    <button class="flex flex-1 items-center justify-center gap-2 px-3 py-3 text-text-secondary transition-colors hover:bg-gray-50 hover:text-secondary-accent">
-                                        <span class="material-symbols-outlined text-xl">share</span>
-                                        <p class="text-sm font-medium">58</p>
-                                    </button>
-                                </div>
+                            <div th:if="${posts.empty}" class="text-center p-10 text-gray-500">
+                                No posts yet. Be the first to share something!
                             </div>
                         </div>
                     </div>
@@ -204,4 +185,22 @@
             <div th:replace="~{fragments/alerts :: alert-script}"></div>
         </div>
     </body>
+
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('image-preview').src = e.target.result;
+                    document.getElementById('image-preview-container').classList.remove('hidden');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function removeImage() {
+            document.getElementById('fileInput').value = "";
+            document.getElementById('image-preview-container').classList.add('hidden');
+        }
+    </script>
 </html>

@@ -13,8 +13,8 @@ public class WebConfig implements WebMvcConfigurer {
         // registry.addResourceHandler("/uploads/**")
         //        .addResourceLocations("file:uploads/");
         
-        // Cấu hình mặc định cho static resources (đã có sẵn trong Spring Boot nhưng khai báo lại cho rõ)
-        registry.addResourceHandler("/**")
-                .addResourceLocations("classpath:/static/");
+        // Map đường dẫn /uploads/** tới thư mục uploads/ trong project
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:uploads/");
     }
 }
