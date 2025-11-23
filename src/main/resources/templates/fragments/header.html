@@ -1,34 +1,218 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-    <body>
-        <!-- TopNavBar -->
-        <header th:fragment="header"
-                class="sticky top-0 z-50 flex h-16 w-full items-center justify-between whitespace-nowrap bg-gradient-to-r from-primary-gradient-start to-primary-gradient-end px-6 shadow-md md:px-10">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <body th:fragment="header">
+        <header
+            class="sticky top-0 z-50 flex h-16 w-full items-center justify-between whitespace-nowrap bg-gradient-to-r from-primary-gradient-start to-primary-gradient-end px-6 shadow-md md:px-10">
+
             <div class="flex items-center gap-8">
-                <div class="flex items-center gap-3 text-white">
-                    <span class="material-symbols-outlined text-3xl">hub</span>
+                <a th:href="@{/}" class="flex items-center gap-3 text-white hover:opacity-90 transition-opacity">
+                    <img class="logo" th:src="@{/icons/zader_logo_notext_transparent_white_600x600.png}" alt="zader_logo"/>
                     <h1 class="text-2xl font-bold leading-tight tracking-tighter">Zader</h1>
-                </div>
+                </a>
                 <div class="hidden lg:flex">
                     <label class="relative flex h-10 w-full min-w-40 max-w-sm items-center">
                         <span class="material-symbols-outlined absolute left-3 text-text-secondary">search</span>
-                        <input class="form-input h-full w-full rounded-lg border-none bg-white/20 pl-10 pr-4 text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-primary-cta" placeholder="Search Zader" type="text"/>
+                        <input
+                            class="form-input h-full w-full rounded-lg border-none bg-white/20 pl-10 pr-4 text-white placeholder:text-white/70 focus:outline-none focus:ring-2 focus:ring-primary-cta"
+                            placeholder="Search Zader" type="text" />
                     </label>
                 </div>
             </div>
+
             <div class="flex items-center justify-end gap-3 md:gap-5">
-                <button class="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/20 text-white transition-colors hover:bg-white/30">
-                    <span class="material-symbols-outlined">chat_bubble</span>
-                    <span class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-primary-gradient-end bg-status-error"></span>
-                </button>
-                <button class="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/20 text-white transition-colors hover:bg-white/30">
-                    <span class="material-symbols-outlined">notifications</span>
-                    <span class="absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-primary-gradient-end bg-status-error"></span>
-                </button>
-                <div class="h-10 w-10 rounded-full bg-cover bg-center bg-no-repeat" data-alt="User avatar of Jane Doe" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD-8H84pBp_a2R8Sw2iZkAbW1dyoqoG1DgJPjFEoZhq66mNfRTAl6-O7H6tiQClD1nhPFQuxr-5w6PADIU8Rs8uMZXOVg8lQiaaDaXbNmW6wpmNw4a22QW0_habPE3qi0pZHwxbleFMoqkxSlaOIto94k98pNw0CH8xiqLJwmAGlDvnP8WzGgCpbCQXPT0EHA8n6jL8yZXTlYG4CQFCZBI9C-mOmvSAcFH93icEW8kowRvhyo73J1GKiMz6dsvwjm2P-2t7WxZyL42x')"></div>
+
+                <div sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/login}"
+                       class="rounded-lg bg-white/20 px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-white/30 hover:text-white">
+                        Log In
+                    </a>
+                </div>
+
+                <div sec:authorize="isAuthenticated()" class="flex items-center gap-3 md:gap-5">
+
+                    <button
+                        class="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/20 text-white transition-colors hover:bg-white/30">
+                        <span class="material-symbols-outlined">chat_bubble</span>
+                    </button>
+
+                    <div class="relative" id="notificationWrapper">
+                        <button onclick="toggleNotifications()"
+                                class="relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-white/20 text-white transition-colors hover:bg-white/30">
+                            <span class="material-symbols-outlined">notifications</span>
+                            <span
+                                class="absolute right-1.5 top-1.5 flex h-4 w-4 items-center justify-center rounded-full border-2 border-primary-gradient-end bg-red-500 text-[10px] font-bold">3</span>
+                        </button>
+
+                        <!-- MOBILE: dùng fixed + inset-x-4; DESKTOP: chuyển về absolute, bám theo icon -->
+                        <div id="notificationDropdown"
+                             class="hidden
+                             fixed inset-x-4 top-20 z-[100]
+                             w-[calc(100%-2rem)] max-w-md
+                             origin-top-right rounded-xl bg-white shadow-2xl
+                             ring-1 ring-black ring-opacity-5 focus:outline-none
+                             whitespace-normal
+                             md:absolute md:inset-x-auto md:right-0 md:top-12 md:mt-2 md:w-96">
+
+                            <div
+                                class="p-4 border-b border-gray-100 flex justify-between items-center bg-white rounded-t-xl">
+                                <h3 class="font-bold text-gray-800">Notifications</h3>
+                                <button class="text-xs text-primary-cta hover:underline">Mark all read</button>
+                            </div>
+
+                            <div class="max-h-[60vh] md:max-h-80 overflow-y-auto bg-white rounded-b-xl">
+                                <a href="#"
+                                   class="flex gap-3 p-3 hover:bg-gray-50 transition-colors border-b border-gray-50 relative group">
+                                    <div
+                                        class="h-10 w-10 rounded-full bg-gray-200 flex-shrink-0 bg-cover bg-center"
+                                        style="background-image: url('https://i.pravatar.cc/150?img=10');"></div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-gray-800 break-words">
+                                            <span class="font-bold">Alex Walker</span> liked your post about
+                                            mountains.
+                                        </p>
+                                        <p class="text-xs text-text-secondary mt-1">2 mins ago</p>
+                                    </div>
+                                    <span
+                                        class="h-2 w-2 bg-blue-500 rounded-full absolute right-2 top-1/2 -translate-y-1/2"></span>
+                                </a>
+
+                                <a href="#"
+                                   class="flex gap-3 p-3 hover:bg-gray-50 transition-colors border-b border-gray-50">
+                                    <div
+                                        class="h-10 w-10 rounded-full bg-gray-200 flex-shrink-0 bg-cover bg-center"
+                                        style="background-image: url('https://i.pravatar.cc/150?img=5');"></div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-gray-800 break-words line-clamp-2">
+                                            <span class="font-bold">Sarah</span> commented: "Great shot! I really love
+                                            the composition..."
+                                        </p>
+                                        <p class="text-xs text-text-secondary mt-1">1 hour ago</p>
+                                    </div>
+                                </a>
+
+                                <a href="#" class="flex gap-3 p-3 hover:bg-gray-50 transition-colors">
+                                    <div
+                                        class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
+                                        <span class="material-symbols-outlined text-sm">person_add</span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm text-gray-800 break-words"><span
+                                                class="font-bold">Michael</span> sent you a friend request.</p>
+                                        <div class="flex gap-2 mt-2">
+                                            <button
+                                                class="bg-primary-cta text-white text-xs px-3 py-1 rounded-md hover:bg-opacity-90">Accept</button>
+                                            <button
+                                                class="bg-gray-200 text-gray-600 text-xs px-3 py-1 rounded-md hover:bg-gray-300">Decline</button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="p-2 border-t border-gray-100 text-center bg-gray-50 rounded-b-xl">
+                                <a href="#"
+                                   class="text-sm text-primary-cta hover:underline font-medium">View all notifications</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative" id="userMenuWrapper">
+                        <button onclick="toggleUserMenu()" 
+                                class="flex items-center gap-3 rounded-full bg-white/10 pl-1 pr-4 py-1 transition-colors hover:bg-white/20 focus:outline-none">
+
+                            <div class="h-8 w-8 rounded-full bg-cover bg-center bg-no-repeat border border-white/30"
+                                 th:style="'background-image: url(' + 
+                                 (${#authentication.principal != 'anonymousUser'} and ${#authentication.principal.member.avatarUrl != null} 
+                                 ? @{'/uploads/' + ${#authentication.principal.member.avatarUrl}} 
+                                 : '/images/default-avatar.png') + ');'">
+                            </div>
+
+                            <span class="text-sm font-semibold text-white max-w-[100px] truncate hidden md:block"
+                                  th:text="${#authentication.principal.member.fullName != null} ? ${#authentication.principal.member.fullName} : ${#authentication.principal.member.username}">
+                                User Name
+                            </span>
+
+                            <span class="material-symbols-outlined text-white text-sm hidden md:block">expand_more</span>
+                        </button>
+
+                        <div id="userDropdown" 
+                             class="hidden absolute right-0 top-12 mt-2 w-48 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 overflow-hidden">
+
+                            <div class="block md:hidden px-4 py-3 border-b border-gray-100">
+                                <p class="text-sm font-bold text-gray-900 truncate" 
+                                   th:text="${#authentication.principal.member.fullName != null} ? ${#authentication.principal.member.fullName} : ${#authentication.principal.member.username}"></p>
+                                <p class="text-xs text-gray-500 truncate" th:text="${#authentication.principal.member.email}">email@example.com</p>
+                            </div>
+
+                            <div class="py-1">
+                                <a th:href="@{/profile}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-cta transition-colors">
+                                    <span class="material-symbols-outlined text-lg">person</span>
+                                    My Profile
+                                </a>
+                                <a th:href="@{/settings}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-cta transition-colors">
+                                    <span class="material-symbols-outlined text-lg">settings</span>
+                                    Settings
+                                </a>
+                            </div>
+
+                            <div class="border-t border-gray-100 py-1">
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 transition-colors">
+                                        <span class="material-symbols-outlined text-lg">logout</span>
+                                        Log Out
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </header>
+
+        <script th:inline="javascript">
+            function toggleNotifications() {
+                const dropdown = document.getElementById('notificationDropdown');
+                dropdown.classList.toggle('hidden');
+            }
+
+            // Đóng dropdown khi click ra ngoài
+            window.addEventListener('click', function (e) {
+                const wrapper = document.getElementById('notificationWrapper');
+                const dropdown = document.getElementById('notificationDropdown');
+                if (!wrapper.contains(e.target) && !dropdown.classList.contains('hidden')) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        </script>
+        <script th:inline="javascript">
+            // ... (Hàm toggleNotifications cũ giữ nguyên) ...
+
+            function toggleUserMenu() {
+                const dropdown = document.getElementById('userDropdown');
+                dropdown.classList.toggle('hidden');
+
+                // Đóng notification nếu đang mở để tránh chồng chéo
+                document.getElementById('notificationDropdown').classList.add('hidden');
+            }
+
+            // Cập nhật sự kiện click ra ngoài (xử lý cho cả 2 dropdown)
+            window.addEventListener('click', function (e) {
+                // Xử lý Notification
+                const notiWrapper = document.getElementById('notificationWrapper');
+                const notiDropdown = document.getElementById('notificationDropdown');
+                if (!notiWrapper.contains(e.target) && !notiDropdown.classList.contains('hidden')) {
+                    notiDropdown.classList.add('hidden');
+                }
+
+                // Xử lý User Menu (MỚI)
+                const userWrapper = document.getElementById('userMenuWrapper');
+                const userDropdown = document.getElementById('userDropdown');
+                if (!userWrapper.contains(e.target) && !userDropdown.classList.contains('hidden')) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+        </script>
     </body>
 </html>
-
-
